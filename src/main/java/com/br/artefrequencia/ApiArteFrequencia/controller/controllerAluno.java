@@ -29,16 +29,15 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @RestController
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${CORS_ORIGIN}")
 
-@RequestMapping("/api")
+@RequestMapping("${API_BASE_PATH}")
 public class controllerAluno {
 
     @Autowired
@@ -47,7 +46,9 @@ public class controllerAluno {
 
     // INICIO DO CRUD
 
-    @PostMapping("artefrequencia/aluno")
+    // CADASTRA OS ALUNOS
+
+    @PostMapping("/aluno")
     public ResponseEntity<?> cadastrar(@Valid @RequestBody Aluno aluno) {
 
         try {
@@ -59,7 +60,6 @@ public class controllerAluno {
                         .body("Já existe um aluno com esse CPF.");
             }
 
-            // dentro do método POST ou PUT:
             if (aluno.getOficinas() != null && !aluno.getOficinas().isEmpty()) {
                 ObjectMapper mapper = new ObjectMapper();
 
@@ -91,20 +91,26 @@ public class controllerAluno {
         }
     }
 
-    @GetMapping("artefrequencia/aluno")
+    // LISTA DOS ALUNOS
+
+    @GetMapping("/aluno")
     public List<Aluno> listaAluno() {
 
         return repositoryAluno.findAll();
     }
 
-    @GetMapping("artefrequencia/aluno/{matricula}")
+    // BUSCA OS ALUNOS PELA MATRICULA
+
+    @GetMapping("/aluno/{matricula}")
     public Aluno listaPelaMatricula(@PathVariable int matricula) {
 
         return repositoryAluno.findByMatricula(matricula);
 
     }
 
-    @PutMapping("/artefrequencia/aluno/{matricula}")
+    // ATUALIZA OS ALUNOS
+
+    @PutMapping("/aluno/{matricula}")
     public ResponseEntity<?> atualizar(@PathVariable Long matricula, @RequestBody Aluno aluno) {
         try {
             Optional<Aluno> existenteOpt = repositoryAluno.findById(matricula);
@@ -163,7 +169,9 @@ public class controllerAluno {
         }
     }
 
-    @DeleteMapping("artefrequencia/aluno/{matricula}")
+    // DELETA OS ALUNOS CADASTRADOS
+
+    @DeleteMapping("/aluno/{matricula}")
     public ResponseEntity<?> deletar(@PathVariable Long matricula) {
         try {
             Optional<Aluno> existentOpt = repositoryAluno.findById(matricula);

@@ -25,9 +25,9 @@ import jakarta.validation.Valid;
 
 @RestController
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${CORS_ORIGIN}")
 
-@RequestMapping("/api")
+@RequestMapping("${API_BASE_PATH}")
 
 public class controllerColaborador {
 
@@ -35,6 +35,7 @@ public class controllerColaborador {
     RepositoryColaborador repositoryColaborador;
     public String existenteOpt;
 
+    // PARA TESTAR O FUNCIONAMENTO DA API
     @GetMapping("/mensagem")
     public String saudacao() {
         return "API rodando BOTA PRA TORAR";
@@ -42,7 +43,9 @@ public class controllerColaborador {
 
     // INICIO DO CRUD
 
-    @PostMapping("artefrequencia/colaborador")
+    // CADASTRA OS COLABORADORES
+
+    @PostMapping("/colaborador")
     public ResponseEntity<?> cadastrar(@Valid @RequestBody Colaborador colaborador) {
 
         String hashSenha = PasswordBCript.encoder(colaborador.getSenha());
@@ -74,19 +77,25 @@ public class controllerColaborador {
         }
     }
 
-    @GetMapping("artefrequencia/colaborador")
+    // LISTA COLABORADORES
+
+    @GetMapping("/colaborador")
     public List<Colaborador> listaColaborador() {
 
         return repositoryColaborador.findAll();
     }
 
-    @GetMapping("artefrequencia/colaborador/{matricula}")
+    // BUSCA COLABORADORES PELA MATRICULA
+
+    @GetMapping("/colaborador/{matricula}")
     public Colaborador listaPelaMatricula(@PathVariable int matricula) {
 
         return repositoryColaborador.findByMatricula(matricula);
     }
 
-    @PutMapping("artefrequencia/colaborador/{matricula}")
+    // ATUALIZA OS COLABORADORES
+
+    @PutMapping("/colaborador/{matricula}")
     public ResponseEntity<?> atualizar(@PathVariable Long matricula,
             @RequestBody Colaborador colaborador) {
         try {
@@ -100,7 +109,6 @@ public class controllerColaborador {
 
             Colaborador existente = existenteOpt.get();
 
-           
             existente.setNome(colaborador.getNome());
             existente.setCpf(colaborador.getCpf());
             existente.setRg(colaborador.getRg());
@@ -111,6 +119,7 @@ public class controllerColaborador {
             existente.setFormacao(colaborador.getFormacao());
             existente.setApelido(colaborador.getApelido());
             existente.setRedeSocial(colaborador.getRedeSocial());
+            existente.setTelefone(colaborador.getTelefone());
             existente.setEmail(colaborador.getEmail());
 
             Colaborador atualizado = repositoryColaborador.save(existente);
@@ -126,7 +135,9 @@ public class controllerColaborador {
         }
     }
 
-    @DeleteMapping("artefrequencia/colaborador/{matricula}")
+    // EXCLUI OS COLABORADOES CADASTRADOS
+
+    @DeleteMapping("/colaborador/{matricula}")
     public ResponseEntity<?> deletar(@PathVariable Long matricula) {
         try {
             Optional<Colaborador> existentOpt = repositoryColaborador.findById(matricula);

@@ -29,7 +29,7 @@ public class Colaborador {
     private String nome;
 
     @NotBlank(message = "Digite o CPF")
-    @CPF(message = "Digite um CPF valido")
+    //@CPF(message = "Digite um CPF valido")
     @Column(name = "cpf", columnDefinition = "VARCHAR(15)", unique = true)
     private String cpf;
 

@@ -24,9 +24,9 @@ import jakarta.validation.Valid;
 
 @RestController
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${CORS_ORIGIN}")
 
-@RequestMapping("/api")
+@RequestMapping("${API_BASE_PATH}")
 
 public class controllerAdministador {
 
@@ -35,7 +35,7 @@ public class controllerAdministador {
 
     // INICIO DO CRUD
 
-    @PostMapping("artefrequencia/administrador")
+    @PostMapping("/administrador")
     public ResponseEntity<?> cadastrar(@Valid @RequestBody Administrador administrador) {
        
        String hashSenha = PasswordBCript.encoder(administrador.getSenha());
@@ -80,13 +80,13 @@ public class controllerAdministador {
      * }
      */
 
-    @GetMapping("artefrequencia/adiministador")
+    @GetMapping("/administador")
     public List<Administrador> listaAdministrador() {
 
         return repositoryAdministrador.findAll();
     }
 
-    @GetMapping("artefrequencia/adiministador/{matricula}")
+    @GetMapping("/administador/{matricula}")
     public Administrador listaPelaMatricula(@PathVariable int matricula) {
 
         return repositoryAdministrador.findByMatricula(matricula);
@@ -113,7 +113,7 @@ public class controllerAdministador {
      * }
      */
 
-    @PutMapping("artefrequencia/adiministador/{matricula}")
+    @PutMapping("/administador/{matricula}")
     public ResponseEntity<?> atualizar(@PathVariable Long matricula,
             @RequestBody Administrador administrador) {
         try {
@@ -159,7 +159,7 @@ public class controllerAdministador {
      * }
      */
 
-    @DeleteMapping("artefrequencia/adiministador/{matricula}")
+    @DeleteMapping("/administador/{matricula}")
     public ResponseEntity<?> deletar(@PathVariable Long matricula) {
         try {
             Optional<Administrador> existenteOpt = repositoryAdministrador.findById(matricula);
