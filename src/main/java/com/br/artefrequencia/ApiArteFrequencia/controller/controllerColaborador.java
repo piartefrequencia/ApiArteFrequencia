@@ -35,12 +35,6 @@ public class controllerColaborador {
     RepositoryColaborador repositoryColaborador;
     public String existenteOpt;
 
-    // PARA TESTAR O FUNCIONAMENTO DA API
-    @GetMapping("/mensagem")
-    public String saudacao() {
-        return "API rodando BOTA PRA TORAR";
-    }
-
     // INICIO DO CRUD
 
     // CADASTRA OS COLABORADORES
