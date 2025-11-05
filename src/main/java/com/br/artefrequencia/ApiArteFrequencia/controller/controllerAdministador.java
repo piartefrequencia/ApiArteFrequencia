@@ -37,11 +37,11 @@ public class controllerAdministador {
 
     @PostMapping("/administrador")
     public ResponseEntity<?> cadastrar(@Valid @RequestBody Administrador administrador) {
-       
-       String hashSenha = PasswordBCript.encoder(administrador.getSenha());
-       administrador.setSenha(hashSenha);
-        
-       try {
+
+        String hashSenha = PasswordBCript.encoder(administrador.getSenha());
+        administrador.setSenha(hashSenha);
+
+        try {
 
             administrador.setMatricula(null);
 

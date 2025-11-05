@@ -18,10 +18,9 @@ public class ApiArteFrequenciaApplication {
 		System.setProperty("DB_NAME", dotenv.get("DB_NAME"));
 		System.setProperty("DB_USER", dotenv.get("DB_USER"));
 		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
-		System.setProperty("PORT", dotenv.get("PORT"));
 		System.setProperty("CORS_ORIGIN", dotenv.get("CORS_ORIGIN"));
 		System.setProperty("API_BASE_PATH", dotenv.get("API_BASE_PATH"));
-		System.setProperty("SPRING_APPLICATION_NAME", dotenv.get("SPRING_APPLICATION_NAME"));
+		
 
 		SpringApplication.run(ApiArteFrequenciaApplication.class, args);
 
