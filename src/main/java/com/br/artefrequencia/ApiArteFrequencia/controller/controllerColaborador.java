@@ -25,9 +25,9 @@ import jakarta.validation.Valid;
 
 @RestController
 
-@CrossOrigin(origins = "${CORS_ORIGIN}")
+@CrossOrigin(origins = "http://localhost:3000")
 
-@RequestMapping("${API_BASE_PATH}")
+@RequestMapping("/api/artefrequencia")
 
 public class controllerColaborador {
 
@@ -136,7 +136,7 @@ public class controllerColaborador {
         try {
             Optional<Colaborador> existentOpt = repositoryColaborador.findById(matricula);
 
-            if (existenteOpt.isEmpty()) {
+            if (existentOpt.isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
                         .body("Colaborador com a matricula" + matricula + "não encontrado.");

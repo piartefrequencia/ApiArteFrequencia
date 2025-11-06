@@ -24,9 +24,9 @@ import jakarta.validation.Valid;
 
 @RestController
 
-@CrossOrigin(origins = "${CORS_ORIGIN}")
+@CrossOrigin(origins = "http://localhost:3000")
 
-@RequestMapping("${API_BASE_PATH}")
+@RequestMapping("/api/artefrequencia")
 
 public class controllerAdministador {
 

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 
-@RequestMapping("${API_BASE_PATH}")
+@RequestMapping("/api/artefrequencia")
 
 public class controllerTesteAPI {
 
