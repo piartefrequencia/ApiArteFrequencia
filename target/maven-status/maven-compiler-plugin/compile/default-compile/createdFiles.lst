@@ -2,7 +2,6 @@ com\br\artefrequencia\ApiArteFrequencia\repository\RepositoryAdministardor.class
 com\br\artefrequencia\ApiArteFrequencia\controller\controllerAluno.class
 com\br\artefrequencia\ApiArteFrequencia\util\PasswordBCript.class
 com\br\artefrequencia\ApiArteFrequencia\model\RespostaModelo.class
-com\br\artefrequencia\ApiArteFrequencia\util\ApiArteFrequenciaApplication.class
 com\br\artefrequencia\ApiArteFrequencia\config\SwaggerConfig.class
 com\br\artefrequencia\ApiArteFrequencia\controller\controllerAluno$1.class
 com\br\artefrequencia\ApiArteFrequencia\model\Partitura.class
