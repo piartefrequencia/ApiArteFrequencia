@@ -15,7 +15,7 @@ public class ApiArteFrequenciaApplication {
 
 			// Carrega variáveis do .env se existir localmente
 		Dotenv dotenv = Dotenv.configure()
-				.ignoreIfMissing() // ignora se não existir (ex: em produção no Railway)
+				.ignoreIfMissing() 
 				.load();
 
 		// Seta propriedades de sistema
@@ -24,7 +24,10 @@ public class ApiArteFrequenciaApplication {
 		System.setProperty("DB_USER", dotenv.get("DB_USER", System.getenv("DB_USER")));
 		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD", System.getenv("DB_PASSWORD")));
 		System.setProperty("DB_NAME", dotenv.get("DB_NAME", System.getenv("DB_NAME")));
+		System.setProperty("CORS_ORIGIN", dotenv.get("CORS_ORIGIN", System.getenv("CORS_ORIGIN")));
 
+		
+	
 		
 		SpringApplication.run(ApiArteFrequenciaApplication.class, args);
 

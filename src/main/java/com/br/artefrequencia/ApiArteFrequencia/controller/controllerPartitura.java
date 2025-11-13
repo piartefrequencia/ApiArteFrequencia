@@ -24,7 +24,7 @@ import com.br.artefrequencia.ApiArteFrequencia.repository.RepositoryPartitura;
 
 @RestController
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${CORS_ORIGIN}")
 
 @RequestMapping("/api/artefrequencia")
 
