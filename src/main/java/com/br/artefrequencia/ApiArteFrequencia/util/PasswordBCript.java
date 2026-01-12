@@ -7,9 +7,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class PasswordBCript {
     
-    public static String encoder(String senha){
-        BCryptPasswordEncoder encoderSenha = new BCryptPasswordEncoder();
-        return encoderSenha.encode(senha);
+   private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    public static String encoder(String raw) {
+        return encoder.encode(raw);
+    }
+
+    public static boolean matches(String raw, String encoded) {
+        return encoder.matches(raw, encoded);
     }
 
 }

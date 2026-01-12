@@ -42,9 +42,6 @@ public class controllerColaborador {
     @PostMapping("/colaborador")
     public ResponseEntity<?> cadastrar(@Valid @RequestBody Colaborador colaborador) {
 
-        String hashSenha = PasswordBCript.encoder(colaborador.getSenha());
-        colaborador.setSenha(hashSenha);
-
         try {
             colaborador.setMatricula(null);
 

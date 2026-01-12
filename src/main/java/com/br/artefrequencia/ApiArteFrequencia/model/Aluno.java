@@ -30,10 +30,12 @@ public class Aluno {
     @Column(name = "nome", columnDefinition = "VARCHAR(150)", nullable = false)
     private String nome;
 
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // para quando estiver em produção
     // @CPF(message = "Digite um CPF valido")
     @Column(name = "cpf", columnDefinition = "VARCHAR(15)", nullable = true)
     private String cpf;
 
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // para quando estiver em produção
     @Column(name = "rg", columnDefinition = "VARCHAR(15)", nullable = true)
     private String rg;
 

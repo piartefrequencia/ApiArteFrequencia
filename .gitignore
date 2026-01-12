@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Ignorar variáveis de ambiente 
+.env
+
 
 ### STS ###
 .apt_generated
@@ -33,5 +36,4 @@ build/
 ### VS Code ###
 .vscode/
 
-# Ignorar variáveis de ambiente 
-.env
+

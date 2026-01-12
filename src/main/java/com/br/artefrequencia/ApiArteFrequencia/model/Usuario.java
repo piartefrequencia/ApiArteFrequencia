@@ -2,28 +2,28 @@ package com.br.artefrequencia.ApiArteFrequencia.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+
 
 @Entity
-@Table(name = "Administracao")
-@lombok.Data
-public class Administrador {
+@Table(name = "usuarios")
+@Data
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "matricula")
-    public Long matricula;
-
-    @NotBlank(message = "Digite seu nome")
-    @Column(name = "nome", columnDefinition = "VARCHAR(150)", nullable = false)
-    private String nome;
+    private Long id;
 
     @Column(name = "usuario", columnDefinition = "VARCHAR(60)", nullable = false)
     private String usuario;
@@ -33,9 +33,13 @@ public class Administrador {
     @Column(name = "email", columnDefinition = "VARCHAR(100)", unique = true)
     private String email;
 
-    @Size(min = 8, message = "Digite no minimo de 8 caracteres")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) 
     @NotBlank(message = "Digite sua senha")
     @Column(name = "senha")
     private String senha;
 
+    @Enumerated(EnumType.STRING)
+    private Perfil perfil;
+
+    
 }

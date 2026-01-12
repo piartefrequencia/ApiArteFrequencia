@@ -13,12 +13,12 @@ public class ApiArteFrequenciaApplication {
 
 	public static void main(String[] args) {
 
-			// Carrega variáveis do .env se existir localmente
+			
 		Dotenv dotenv = Dotenv.configure()
 				.ignoreIfMissing() 
 				.load();
 
-		// Seta propriedades de sistema
+		
 		System.setProperty("DB_HOST", dotenv.get("DB_HOST", System.getenv("DB_HOST")));
 		System.setProperty("DB_PORT", dotenv.get("DB_PORT", System.getenv("DB_PORT")));
 		System.setProperty("DB_USER", dotenv.get("DB_USER", System.getenv("DB_USER")));

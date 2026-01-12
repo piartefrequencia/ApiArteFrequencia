@@ -2,9 +2,7 @@ package com.br.artefrequencia.ApiArteFrequencia.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.br.artefrequencia.ApiArteFrequencia.model.Administrador;
 import com.br.artefrequencia.ApiArteFrequencia.model.Aluno;
-import com.br.artefrequencia.ApiArteFrequencia.model.Colaborador;
 import com.br.artefrequencia.ApiArteFrequencia.repository.RepositoryAluno;
 import com.br.artefrequencia.ApiArteFrequencia.util.PasswordBCript;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -174,7 +172,7 @@ public class controllerAluno {
     @DeleteMapping("/aluno/{matricula}")
     public ResponseEntity<?> deletar(@PathVariable Long matricula) {
         try {
-            Optional<Aluno> existentOpt = repositoryAluno.findById(matricula);
+            Optional<Aluno> existenteOpt = repositoryAluno.findById(matricula);
 
             if (existenteOpt.isEmpty()) {
                 return ResponseEntity
@@ -182,7 +180,7 @@ public class controllerAluno {
                         .body("Aluno com a matricula" + matricula + "não encontrado.");
             }
 
-            repositoryAluno.delete(existentOpt.get());
+            repositoryAluno.delete(existenteOpt.get());
 
             return ResponseEntity
                     .status(HttpStatus.OK)

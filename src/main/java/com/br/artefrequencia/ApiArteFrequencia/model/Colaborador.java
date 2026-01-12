@@ -68,7 +68,4 @@ public class Colaborador {
     @Column(name = "email", columnDefinition = "VARCHAR(150)", unique = true)
     private String email;
 
-    @Column(name = "senha")
-    private String senha;
-
 }
