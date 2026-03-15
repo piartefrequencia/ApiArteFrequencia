@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -23,11 +24,15 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
+    @Autowired
+    private CorsConfigurationSource corsConfigurationSource;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> {})
+                // Conecta o Security ao seu CorsConfig personalizado
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {

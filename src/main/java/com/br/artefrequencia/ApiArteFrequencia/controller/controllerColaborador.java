@@ -25,8 +25,6 @@ import jakarta.validation.Valid;
 
 @RestController
 
-@CrossOrigin(origins = "${CORS_ORIGIN}")
-
 @RequestMapping("/api/artefrequencia")
 
 public class controllerColaborador {

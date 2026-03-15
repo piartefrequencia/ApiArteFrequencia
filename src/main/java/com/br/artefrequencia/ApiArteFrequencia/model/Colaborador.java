@@ -1,7 +1,10 @@
 package com.br.artefrequencia.ApiArteFrequencia.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 
 import jakarta.persistence.Column;
@@ -67,5 +70,13 @@ public class Colaborador {
     @NotBlank(message = "Email e obrigatório")
     @Column(name = "email", columnDefinition = "VARCHAR(150)", unique = true)
     private String email;
+
+    
+    @CreationTimestamp  
+    @Column(updatable = false)
+    private LocalDateTime dataCriacao;
+
+    @UpdateTimestamp
+    private LocalDateTime dataAtualizacao;
 
 }

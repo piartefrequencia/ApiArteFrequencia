@@ -33,8 +33,6 @@ import org.springframework.http.ResponseEntity;
 
 @RestController
 
-@CrossOrigin(origins = "${CORS_ORIGIN}")
-
 @RequestMapping("/api/artefrequencia")
 public class controllerAluno {
 

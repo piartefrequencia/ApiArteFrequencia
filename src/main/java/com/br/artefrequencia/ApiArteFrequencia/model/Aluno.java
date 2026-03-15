@@ -5,7 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 
 @Entity
@@ -116,5 +119,13 @@ public class Aluno {
 
     @Column(name = "descricaoNecessidadesEspeciais", columnDefinition = "VARCHAR(150)", nullable = true)
     private String descricaoNecessidadesEspeciais;
+
+    
+    @CreationTimestamp  
+    @Column(updatable = false)
+    private LocalDateTime dataCriacao;
+
+    @UpdateTimestamp
+    private LocalDateTime dataAtualizacao;
 
 }

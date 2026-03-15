@@ -12,6 +12,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.br.artefrequencia.ApiArteFrequencia.enums.Perfil;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
@@ -39,7 +45,15 @@ public class Usuario {
     private String senha;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "perfil", columnDefinition = "VARCHAR(20)", nullable = false)
     private Perfil perfil;
+
+    
+    @CreationTimestamp  
+    private LocalDateTime dataCriacao;
+
+    @UpdateTimestamp
+    private LocalDateTime dataAtualizacao;
 
     
 }
