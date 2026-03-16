@@ -7,8 +7,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 
+import com.br.artefrequencia.ApiArteFrequencia.enums.Perfil;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,14 +22,16 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Entity
-@Table(name = "Colaborador")
+@Table(name = "Colaboradores")
 @Data
 public class Colaborador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "matricula")
-    public Long matricula;
+    private Long id;
+
+    @Column(name = "matricula", nullable = true)
+    private Integer matricula; 
 
     @NotBlank(message = " Digite seu nome")
     @Column(name = "nome", columnDefinition = "VARCHAR(150)", nullable = false)
@@ -70,6 +76,10 @@ public class Colaborador {
     @NotBlank(message = "Email e obrigatório")
     @Column(name = "email", columnDefinition = "VARCHAR(150)", unique = true)
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "perfil", columnDefinition = "VARCHAR(20)", nullable = false)
+    private Perfil perfil;
 
     
     @CreationTimestamp  

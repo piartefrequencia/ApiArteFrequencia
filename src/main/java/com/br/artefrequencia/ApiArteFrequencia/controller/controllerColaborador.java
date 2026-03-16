@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.br.artefrequencia.ApiArteFrequencia.enums.Perfil;
 import com.br.artefrequencia.ApiArteFrequencia.model.Colaborador;
+import com.br.artefrequencia.ApiArteFrequencia.model.Usuario;
 import com.br.artefrequencia.ApiArteFrequencia.repository.RepositoryColaborador;
+import com.br.artefrequencia.ApiArteFrequencia.repository.RepositoryUsuario;
 import com.br.artefrequencia.ApiArteFrequencia.util.PasswordBCript;
 
 import jakarta.validation.Valid;
@@ -31,73 +35,75 @@ public class controllerColaborador {
 
     @Autowired
     RepositoryColaborador repositoryColaborador;
-    public String existenteOpt;
+
+    @Autowired
+    private RepositoryUsuario repositoryUsuario;
 
     // INICIO DO CRUD
 
     // CADASTRA OS COLABORADORES
 
     @PostMapping("/colaborador")
+    @Transactional
     public ResponseEntity<?> cadastrar(@Valid @RequestBody Colaborador colaborador) {
-
         try {
-            colaborador.setMatricula(null);
+            colaborador.setId(null);
 
-            if (repositoryColaborador.existsByEmail(colaborador.getEmail())) {
-                return ResponseEntity
-                        .status(HttpStatus.CONFLICT)
-                        .body("Já existe um colaborador com esse email.");
+            if (colaborador.getPerfil() == null
+                    || !(colaborador.getPerfil() == Perfil.PROF || colaborador.getPerfil() == Perfil.ESTAG)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Perfil inválido. Use PROF ou ESTAG.");
             }
+
+            if (repositoryColaborador.existsByEmail(colaborador.getEmail())
+                    || repositoryUsuario.existsByEmail(colaborador.getEmail())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("E-mail já cadastrado.");
+            }
+
             if (repositoryColaborador.existsByCpf(colaborador.getCpf())) {
-                return ResponseEntity
-                        .status(HttpStatus.CONFLICT)
-                        .body("Já existe um colaborador com esse CPF");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado.");
             }
-            Colaborador resposta = repositoryColaborador.save(colaborador);
 
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body("Colaborador criado com sucesso" + "" + resposta.getMatricula());
+            Integer novaMatricula = repositoryColaborador.gerarNovaMatricula();
+            colaborador.setMatricula(novaMatricula);
 
+            Colaborador salvo = repositoryColaborador.save(colaborador);
+
+            Usuario usuario = new Usuario();
+            usuario.setUsuario(colaborador.getNome());
+            usuario.setEmail(colaborador.getEmail());
+            usuario.setSenha(PasswordBCript.encoder(colaborador.getCpf()));
+            usuario.setPerfil(colaborador.getPerfil());
+
+            Usuario usuarioSalvo = repositoryUsuario.save(usuario);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Colaborador e Usuário criados com sucesso!");
         } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("erro ao cadastrar coloborador" + "" + e.getMessage());
+            return ResponseEntity.status(500).body("Erro ao cadastrar: " + e.getMessage());
         }
     }
 
-    // LISTA COLABORADORES
-
     @GetMapping("/colaborador")
     public List<Colaborador> listaColaborador() {
-
         return repositoryColaborador.findAll();
     }
 
-    // BUSCA COLABORADORES PELA MATRICULA
-
     @GetMapping("/colaborador/{matricula}")
-    public Colaborador listaPelaMatricula(@PathVariable int matricula) {
-
-        return repositoryColaborador.findByMatricula(matricula);
+    public ResponseEntity<Colaborador> listaPelaMatricula(@PathVariable Integer matricula) {
+        return repositoryColaborador.findByMatricula(matricula)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // ATUALIZA OS COLABORADORES
-
     @PutMapping("/colaborador/{matricula}")
-    public ResponseEntity<?> atualizar(@PathVariable Long matricula,
-            @RequestBody Colaborador colaborador) {
+    @Transactional
+    public ResponseEntity<?> atualizar(@PathVariable Integer matricula, @RequestBody Colaborador colaborador) {
         try {
-            Optional<Colaborador> existenteOpt = repositoryColaborador.findById(matricula);
-
+            Optional<Colaborador> existenteOpt = repositoryColaborador.findByMatricula(matricula);
             if (existenteOpt.isEmpty()) {
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body("Colaborador com matricula" + matricula + "não encontardo.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Matrícula " + matricula + " não encontrada.");
             }
 
             Colaborador existente = existenteOpt.get();
-
             existente.setNome(colaborador.getNome());
             existente.setCpf(colaborador.getCpf());
             existente.setRg(colaborador.getRg());
@@ -110,45 +116,27 @@ public class controllerColaborador {
             existente.setRedeSocial(colaborador.getRedeSocial());
             existente.setTelefone(colaborador.getTelefone());
             existente.setEmail(colaborador.getEmail());
+            existente.setPerfil(colaborador.getPerfil());
 
-            Colaborador atualizado = repositoryColaborador.save(existente);
-
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body("Colaborador cadastrado com sucesso." + "" + atualizado.getMatricula());
-
+            repositoryColaborador.save(existente);
+            return ResponseEntity.ok("Colaborador atualizado com sucesso.");
         } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao cadastrar colaborador");
+            return ResponseEntity.status(500).body("Erro ao atualizar: " + e.getMessage());
         }
     }
-
-    // EXCLUI OS COLABORADOES CADASTRADOS
 
     @DeleteMapping("/colaborador/{matricula}")
-    public ResponseEntity<?> deletar(@PathVariable Long matricula) {
+    @Transactional
+    public ResponseEntity<?> deletar(@PathVariable Integer matricula) {
         try {
-            Optional<Colaborador> existentOpt = repositoryColaborador.findById(matricula);
-
-            if (existentOpt.isEmpty()) {
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body("Colaborador com a matricula" + matricula + "não encontrado.");
-
+            Optional<Colaborador> existenteOpt = repositoryColaborador.findByMatricula(matricula);
+            if (existenteOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Matrícula " + matricula + " não encontrada.");
             }
-
-            repositoryColaborador.delete(existentOpt.get());
-
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body("Colaborador com matricula" + matricula + " deletado com sucesso.");
+            repositoryColaborador.delete(existenteOpt.get());
+            return ResponseEntity.ok("Deletado com sucesso.");
         } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao deletar colaborador: " + e.getMessage());
-
+            return ResponseEntity.status(500).body("Erro ao deletar: " + e.getMessage());
         }
     }
-
 }
