@@ -18,8 +18,10 @@ public class Aluno {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "matricula")
-    public Long matricula;
+    private Long id;
+
+    @Column(name = "matricula", nullable = true)
+    private Integer matricula;
 
     @Lob
     @Column(columnDefinition = "LONGTEXT")
@@ -33,12 +35,14 @@ public class Aluno {
     @Column(name = "nome", columnDefinition = "VARCHAR(150)", nullable = false)
     private String nome;
 
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // para quando estiver em produção
+    // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // para quando estiver
+    // em produção
     // @CPF(message = "Digite um CPF valido")
     @Column(name = "cpf", columnDefinition = "VARCHAR(15)", nullable = true)
     private String cpf;
 
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // para quando estiver em produção
+    // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // para quando estiver
+    // em produção
     @Column(name = "rg", columnDefinition = "VARCHAR(15)", nullable = true)
     private String rg;
 
@@ -120,8 +124,7 @@ public class Aluno {
     @Column(name = "descricaoNecessidadesEspeciais", columnDefinition = "VARCHAR(150)", nullable = true)
     private String descricaoNecessidadesEspeciais;
 
-    
-    @CreationTimestamp  
+    @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime dataCriacao;
 

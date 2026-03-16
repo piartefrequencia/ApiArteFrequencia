@@ -55,6 +55,9 @@ public class controllerAluno {
                         .status(HttpStatus.CONFLICT)
                         .body("Já existe um aluno com esse CPF.");
             }
+            
+            Integer novaMatricula = repositoryAluno.gerarNovaMatricula();
+            aluno.setMatricula(novaMatricula);
 
             if (aluno.getOficinas() != null && !aluno.getOficinas().isEmpty()) {
                 ObjectMapper mapper = new ObjectMapper();
