@@ -31,6 +31,10 @@ public class Aluno {
     @Column(name = "oficinas", columnDefinition = "TEXT", nullable = true)
     private String oficinas;
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String qrcode;
+
     @NotBlank(message = " Digite seu nome")
     @Column(name = "nome", columnDefinition = "VARCHAR(150)", nullable = false)
     private String nome;
