@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.br.artefrequencia.ApiArteFrequencia.model.Usuario;
-import com.br.artefrequencia.ApiArteFrequencia.repository.RepositoryUsuario;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Usuario;
+import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryUsuario;
 import com.br.artefrequencia.ApiArteFrequencia.util.PasswordBCript;
 
 import jakarta.validation.Valid;

@@ -8,7 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.br.artefrequencia.ApiArteFrequencia.model.Usuario;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Usuario;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

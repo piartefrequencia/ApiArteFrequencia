@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.br.artefrequencia.ApiArteFrequencia.enums.Perfil;
-import com.br.artefrequencia.ApiArteFrequencia.model.Colaborador;
-import com.br.artefrequencia.ApiArteFrequencia.model.Usuario;
-import com.br.artefrequencia.ApiArteFrequencia.repository.RepositoryColaborador;
-import com.br.artefrequencia.ApiArteFrequencia.repository.RepositoryUsuario;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Colaborador;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Usuario;
+import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryColaborador;
+import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryUsuario;
 import com.br.artefrequencia.ApiArteFrequencia.util.PasswordBCript;
 
 import jakarta.validation.Valid;

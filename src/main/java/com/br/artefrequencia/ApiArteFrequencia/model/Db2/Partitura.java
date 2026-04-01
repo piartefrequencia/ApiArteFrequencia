@@ -1,4 +1,4 @@
-package com.br.artefrequencia.ApiArteFrequencia.model;
+package com.br.artefrequencia.ApiArteFrequencia.model.Db2;
 
 import java.time.LocalDateTime;
 

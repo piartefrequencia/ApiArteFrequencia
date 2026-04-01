@@ -10,8 +10,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.br.artefrequencia.ApiArteFrequencia.model.Usuario;
-import com.br.artefrequencia.ApiArteFrequencia.repository.RepositoryUsuario;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Usuario;
+import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryUsuario;
+
+
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

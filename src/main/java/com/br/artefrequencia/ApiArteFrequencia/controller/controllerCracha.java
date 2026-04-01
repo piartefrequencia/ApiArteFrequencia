@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-import com.br.artefrequencia.ApiArteFrequencia.model.Aluno;
-import com.br.artefrequencia.ApiArteFrequencia.repository.RepositoryAluno;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Aluno;
+import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryAluno;
 import com.br.artefrequencia.ApiArteFrequencia.service.CrachaService;
 
 
@@ -24,7 +24,7 @@ public class controllerCracha {
     @Autowired
     CrachaService crachaservico;
 
-    @GetMapping("/aluno/{id}/cracha.png")
+    @GetMapping("/aluno/{matricula}/cracha.png")
     public ResponseEntity<?> crachaIndividual(@PathVariable Long id) {
         try {
             Optional<Aluno> opt = repositoryAluno.findById(id);

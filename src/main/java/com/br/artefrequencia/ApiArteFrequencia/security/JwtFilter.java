@@ -11,8 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.br.artefrequencia.ApiArteFrequencia.model.Usuario;
-import com.br.artefrequencia.ApiArteFrequencia.repository.RepositoryUsuario;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Usuario;
+import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryUsuario;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

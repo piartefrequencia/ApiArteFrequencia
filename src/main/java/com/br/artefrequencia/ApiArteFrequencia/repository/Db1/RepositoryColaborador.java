@@ -1,11 +1,11 @@
-package com.br.artefrequencia.ApiArteFrequencia.repository;
+package com.br.artefrequencia.ApiArteFrequencia.repository.Db1;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.br.artefrequencia.ApiArteFrequencia.model.Colaborador;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Colaborador;
 
 public interface RepositoryColaborador extends JpaRepository <Colaborador,Long>{
 

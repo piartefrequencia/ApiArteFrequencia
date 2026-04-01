@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.br.artefrequencia.ApiArteFrequencia.model.Partitura;
-import com.br.artefrequencia.ApiArteFrequencia.repository.RepositoryPartitura;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db2.Partitura;
+import com.br.artefrequencia.ApiArteFrequencia.repository.Db2.RepositoryPartitura;
+
+
 
 @RestController
 

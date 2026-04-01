@@ -10,9 +10,8 @@ import javax.imageio.ImageIO;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import com.br.artefrequencia.ApiArteFrequencia.model.Aluno;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Aluno;
 import com.br.artefrequencia.ApiArteFrequencia.util.QRCodeGenerator;
-
 
 @Service
 public class CrachaService {
@@ -28,30 +27,29 @@ public class CrachaService {
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        // FUNDO + MARCA D'ÁGUA
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, width, height);
+        try {
+            ClassPathResource resource = new ClassPathResource("static/ProCidadania.png");
+            InputStream input = resource.getInputStream();
 
-    // FUNDO + MARCA D'ÁGUA
-    g.setColor(Color.WHITE);
-    g.fillRect(0, 0, width, height);
-try {
-    ClassPathResource resource = new ClassPathResource("static/ProCidadania.png");
-    InputStream input = resource.getInputStream();
+            BufferedImage fundo = ImageIO.read(input);
+            // TRANSPARÊNCIA DA IMAGEM
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.75f));
 
-    BufferedImage fundo = ImageIO.read(input);
-    // TRANSPARÊNCIA DA IMAGEM
-    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.75f));
+            int imgW = 550;
+            int imgH = 550;
 
-    int imgW = 550;
-    int imgH = 550;
+            int imgX = (width - imgW) / 2;
+            int imgY = (height - imgH) / 2;
 
-    int imgX = (width - imgW) / 2;
-    int imgY = (height - imgH) / 2;
+            g.drawImage(fundo, imgX, imgY, imgW, imgH, null);
+            // VOLTAR PARA OPACIDADE NORMAL
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 
-    g.drawImage(fundo, imgX, imgY, imgW, imgH, null);
-    // VOLTAR PARA OPACIDADE NORMAL
-    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-
-} catch  (Exception e){
-   // fallback caso não encontre a imagem
+        } catch (Exception e) {
+            // fallback caso não encontre a imagem
             g.setColor(Color.WHITE);
             g.fillRect(0, 0, width, height);
 
@@ -71,7 +69,7 @@ try {
         int fotoH = 400;
         int fotoX = (width - fotoW) / 2;
         int fotoY = 90;
-    try {
+        try {
             String fotoStr = aluno.getFoto();
             if (fotoStr != null && !fotoStr.isEmpty()) {
                 String base64 = fotoStr.contains(",") ? fotoStr.split(",", 2)[1] : fotoStr;
@@ -81,7 +79,7 @@ try {
                 g.drawImage(fotoScaled, fotoX, fotoY, null);
 
             }
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             g.setColor(Color.LIGHT_GRAY);
             g.fillRect(fotoX, fotoY, fotoW, fotoH);
         }
@@ -106,11 +104,11 @@ try {
                     400,
                     400);
         }
-    try {
+        try {
             String qrOnly = qrBase64.contains(",") ? qrBase64.split(",", 2)[1] : qrBase64;
             byte[] qrBytes = Base64.getDecoder().decode(qrOnly);
             BufferedImage qrImage = ImageIO.read(new java.io.ByteArrayInputStream(qrBytes));
-           
+
             int qrSize = 300;
 
             int qrX = (width - qrSize) / 2;
@@ -120,7 +118,7 @@ try {
             Image qrScaled = qrImage.getScaledInstance(qrSize, qrSize, Image.SCALE_SMOOTH);
 
             g.drawImage(qrScaled, qrX, qrY, null);
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             g.setColor(Color.RED);
             drawCentered(g, "Erro no QR", width / 2, height - 200);
         }
