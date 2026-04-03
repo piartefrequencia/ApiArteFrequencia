@@ -1,21 +1,14 @@
 package com.br.artefrequencia.ApiArteFrequencia.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
-
 import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Aluno;
 import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryAluno;
 import com.br.artefrequencia.ApiArteFrequencia.service.CrachaService;
 
-
 @RestController
-
 @RequestMapping("/api/artefrequencia")
-
 public class controllerCracha {
 
     @Autowired
@@ -25,14 +18,15 @@ public class controllerCracha {
     CrachaService crachaservico;
 
     @GetMapping("/aluno/{matricula}/cracha.png")
-    public ResponseEntity<?> crachaIndividual(@PathVariable Long id) {
+    public ResponseEntity<?> crachaIndividual(@PathVariable("matricula") Long matricula) {
         try {
-            Optional<Aluno> opt = repositoryAluno.findById(id);
-            if (opt.isEmpty()) {
+            // BUSCA PELA MATRÍCULA (Certifique-se que o método existe no seu Repository)
+            Aluno aluno = repositoryAluno.findByMatricula(matricula);
+            
+            if (aluno == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aluno não encontrado");
             }
 
-            Aluno aluno = opt.get();
             byte[] png = crachaservico.gerarCrachaPNG(aluno);
 
             HttpHeaders headers = new HttpHeaders();
@@ -46,5 +40,4 @@ public class controllerCracha {
                     .body("Erro ao gerar crachá: " + e.getMessage());
         }
     }
-    
 }

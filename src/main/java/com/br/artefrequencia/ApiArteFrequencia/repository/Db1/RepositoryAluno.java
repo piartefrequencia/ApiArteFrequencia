@@ -7,11 +7,15 @@ import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Aluno;
 
 public interface RepositoryAluno extends JpaRepository <Aluno,Long> {
 
-     Aluno findByMatricula(int matricula);
+    Aluno findByMatricula(int matricula);
 
     boolean existsByCpf(String cpf);
 
     @Query("SELECT COALESCE(MAX(a.matricula), 0) + 1 FROM Aluno a")
     Integer gerarNovaMatricula();
+
+    Aluno findByMatricula(Long matricula);
+
+    
     
 }
