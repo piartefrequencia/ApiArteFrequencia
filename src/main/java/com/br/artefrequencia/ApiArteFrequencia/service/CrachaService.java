@@ -62,7 +62,7 @@ public class CrachaService {
         // TITULO
         g.setFont(new Font("Arial", Font.BOLD, 34));
         g.setColor(Color.BLACK);
-        drawCentered(g, "Instituição Pró-Cidadania", width / 2, 60);
+        drawCentered(g, "Associação Pró-Cidadania", width / 2, 60);
 
         // FOTO
         int fotoW = 300;

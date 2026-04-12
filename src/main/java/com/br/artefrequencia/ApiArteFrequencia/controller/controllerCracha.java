@@ -20,13 +20,12 @@ public class controllerCracha {
     @GetMapping("/aluno/{matricula}/cracha.png")
     public ResponseEntity<?> crachaIndividual(@PathVariable("matricula") Long matricula) {
         try {
-            // BUSCA PELA MATRÍCULA (Certifique-se que o método existe no seu Repository)
-            Aluno aluno = repositoryAluno.findByMatricula(matricula);
+            Aluno aluno = repositoryAluno.findByMatricula(matricula.intValue());
             
             if (aluno == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aluno não encontrado");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Aluno com matrícula " + matricula + " não encontrado.");
             }
-
             byte[] png = crachaservico.gerarCrachaPNG(aluno);
 
             HttpHeaders headers = new HttpHeaders();
@@ -35,6 +34,7 @@ public class controllerCracha {
             headers.setContentLength(png.length);
 
             return new ResponseEntity<>(png, headers, HttpStatus.OK);
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao gerar crachá: " + e.getMessage());

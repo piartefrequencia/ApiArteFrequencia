@@ -13,9 +13,5 @@ public interface RepositoryAluno extends JpaRepository <Aluno,Long> {
 
     @Query("SELECT COALESCE(MAX(a.matricula), 0) + 1 FROM Aluno a")
     Integer gerarNovaMatricula();
-
-    Aluno findByMatricula(Long matricula);
-
-    
     
 }
