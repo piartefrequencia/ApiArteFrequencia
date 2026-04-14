@@ -1,6 +1,8 @@
 package com.br.artefrequencia.ApiArteFrequencia.service;
 
+
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Aluno;
 import com.br.artefrequencia.ApiArteFrequencia.util.QRCodeGenerator;
 
+
+
 @Service
 public class CrachaService {
 
@@ -22,81 +26,85 @@ public class CrachaService {
         int height = 900;
 
         BufferedImage cracha = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = cracha.createGraphics();
+        Graphics2D grafica = cracha.createGraphics();
 
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        grafica.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        grafica.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // FUNDO + MARCA D'ÁGUA
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, width, height);
+        // FUNDO BRANCO
+        grafica.setColor(Color.BLACK);
+        grafica.fillRect(0, 0, width, height);
+
+        // MARCA D'ÁGUA (LOGO CENTRAL)
         try {
             ClassPathResource resource = new ClassPathResource("static/ProCidadania.png");
             InputStream input = resource.getInputStream();
+            BufferedImage logo = ImageIO.read(input);
 
-            BufferedImage fundo = ImageIO.read(input);
-            // TRANSPARÊNCIA DA IMAGEM
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.75f));
+            grafica.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.40f));
 
-            int imgW = 550;
-            int imgH = 550;
+            int size = 600;
+            int x = (width - size) / 2;
+            int y = (height - size) / 2;
 
-            int imgX = (width - imgW) / 2;
-            int imgY = (height - imgH) / 2;
-
-            g.drawImage(fundo, imgX, imgY, imgW, imgH, null);
-            // VOLTAR PARA OPACIDADE NORMAL
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-
+            grafica.drawImage(logo, x, y, size, size, null);
+            grafica.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         } catch (Exception e) {
-            // fallback caso não encontre a imagem
-            g.setColor(Color.WHITE);
-            g.fillRect(0, 0, width, height);
-
         }
         // BORDA
-        g.setColor(Color.BLACK);
-        g.setStroke(new BasicStroke(4f));
-        g.drawRoundRect(10, 10, width - 20, height - 20, 20, 20);
+        grafica.setColor(new Color(30, 30, 30));
+        grafica.setStroke(new BasicStroke(0f));
+        grafica.drawRoundRect(10, 10, width - 20, height - 20, 25, 25);
 
         // TITULO
-        g.setFont(new Font("Arial", Font.BOLD, 34));
-        g.setColor(Color.BLACK);
-        drawCentered(g, "Associação Pró-Cidadania", width / 2, 60);
+        grafica.setFont(new Font("Arial", Font.BOLD, 34));
+        grafica.setColor(Color.WHITE);
+        drawCentered(grafica, "Associação Pró-Cidadania", width / 2, 70);
 
-        // FOTO
-        int fotoW = 300;
-        int fotoH = 400;
+        // FOTO COM BORDA ARREDONDADA
+        int fotoW = 280;
+        int fotoH = 300;
         int fotoX = (width - fotoW) / 2;
-        int fotoY = 90;
+        int fotoY = 120;
+
         try {
             String fotoStr = aluno.getFoto();
             if (fotoStr != null && !fotoStr.isEmpty()) {
+
                 String base64 = fotoStr.contains(",") ? fotoStr.split(",", 2)[1] : fotoStr;
                 byte[] fotoBytes = Base64.getDecoder().decode(base64);
                 BufferedImage foto = ImageIO.read(new java.io.ByteArrayInputStream(fotoBytes));
-                Image fotoScaled = foto.getScaledInstance(fotoW, fotoH, Image.SCALE_SMOOTH);
-                g.drawImage(fotoScaled, fotoX, fotoY, null);
 
+                Shape clip = new RoundRectangle2D.Float(fotoX, fotoY, fotoW, fotoH, 30, 30);
+                grafica.setClip(clip);
+
+                grafica.drawImage(foto, fotoX, fotoY, fotoW, fotoH, null);
+
+                grafica.setClip(null);
+
+                // borda
+                grafica.setColor(Color.GRAY);
+                grafica.setStroke(new BasicStroke(2f));
+                grafica.drawRoundRect(fotoX, fotoY, fotoW, fotoH, 30, 30);
             }
-        } catch (Exception ex) {
-            g.setColor(Color.LIGHT_GRAY);
-            g.fillRect(fotoX, fotoY, fotoW, fotoH);
+
+        } catch (Exception e) {
+            grafica.setColor(Color.LIGHT_GRAY);
+            grafica.fillRoundRect(fotoX, fotoY, fotoW, fotoH, 30, 30);
         }
-        // NOME DO ALUNO
-        g.setColor(Color.BLACK);
-        g.setFont(new Font("Arial", Font.BOLD, 34));
 
-        int nomeY = fotoY + fotoH + 70;
+        // NOME
+        grafica.setFont(new Font("Arial", Font.BOLD, 32));
+        grafica.setColor(Color.WHITE);
 
+        int nomeY = fotoY + fotoH + 60;
         int linhasNome = drawMultiLineCentered(
-                g,
-                aluno.getNome(),
+                grafica, aluno.getNome(),
                 width / 2,
                 nomeY,
-                width - 80);
+                width - 100);
 
-        // QR CODE
+        // QR CODE COM MOLDURA
         String qrBase64 = aluno.getQrcode();
         if (qrBase64 == null || qrBase64.isEmpty()) {
             qrBase64 = QRCodeGenerator.generateQRCodeBase64(
@@ -109,20 +117,28 @@ public class CrachaService {
             byte[] qrBytes = Base64.getDecoder().decode(qrOnly);
             BufferedImage qrImage = ImageIO.read(new java.io.ByteArrayInputStream(qrBytes));
 
-            int qrSize = 300;
+            int qrSize = 320;
 
             int qrX = (width - qrSize) / 2;
+            int qrY = nomeY + (linhasNome * grafica.getFontMetrics().getHeight()) + 10;
 
-            int qrY = nomeY + (linhasNome * g.getFontMetrics().getHeight()) - 30;
+            // fundo branco do QR (moldura)
+            int padding = -50;
 
-            Image qrScaled = qrImage.getScaledInstance(qrSize, qrSize, Image.SCALE_SMOOTH);
+            grafica.setColor(Color.WHITE);
+            grafica.fillRoundRect(qrX - padding, qrY - padding, qrSize + (padding * 2), qrSize + (padding * 2), 15, 15);
 
-            g.drawImage(qrScaled, qrX, qrY, null);
-        } catch (Exception ex) {
-            g.setColor(Color.RED);
-            drawCentered(g, "Erro no QR", width / 2, height - 200);
+            grafica.setColor(Color.GRAY);
+            grafica.drawRoundRect(qrX - padding, qrY - padding, qrSize + (padding * 2), qrSize + (padding * 2), 15, 15);
+
+            // QR
+            grafica.drawImage(qrImage, qrX, qrY, qrSize, qrSize, null);
+
+        } catch (Exception e) {
+            grafica.setColor(Color.RED);
+            drawCentered(grafica, "Erro no QR", width / 2, height - 200);
         }
-        g.dispose();
+        grafica.dispose();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(cracha, "png", baos);
 
@@ -130,39 +146,29 @@ public class CrachaService {
     }
 
     // TEXTO CENTRALIZADO
-    private void drawCentered(Graphics2D g, String text, int centerX, int baselineY) {
+    private void drawCentered(Graphics2D grafica, String text, int centerX, int y) {
         if (text == null)
             text = "";
-        FontMetrics fm = g.getFontMetrics();
-
-        int textWidth = fm.stringWidth(text);
-
-        int x = centerX - textWidth / 2;
-
-        g.drawString(text, x, baselineY);
+        FontMetrics fm = grafica.getFontMetrics();
+        int x = centerX - fm.stringWidth(text) / 2;
+        grafica.drawString(text, x, y);
     }
 
-    // TEXTO COM QUEBRA AUTOMÁTICA
-    private int drawMultiLineCentered(Graphics2D g, String text, int centerX, int startY, int maxWidth) {
+    // TEXTO MULTILINHA
+    private int drawMultiLineCentered(Graphics2D grafica, String text, int centerX, int startY, int maxWidth) {
+
         if (text == null)
             text = "";
-
-        FontMetrics fm = g.getFontMetrics();
-
+        FontMetrics fm = grafica.getFontMetrics();
         String[] words = text.split(" ");
-
         String line = "";
-
         int y = startY;
-
         int lines = 0;
 
         for (String word : words) {
-
             String testLine = line + word + " ";
-            int width = fm.stringWidth(testLine);
-            if (width > maxWidth) {
-                drawCentered(g, line.trim(), centerX, y);
+            if (fm.stringWidth(testLine) > maxWidth) {
+                drawCentered(grafica, line.trim(), centerX, y);
                 line = word + " ";
                 y += fm.getHeight();
                 lines++;
@@ -171,7 +177,7 @@ public class CrachaService {
             }
         }
         if (!line.isEmpty()) {
-            drawCentered(g, line.trim(), centerX, y);
+            drawCentered(grafica, line.trim(), centerX, y);
             lines++;
         }
         return lines;
