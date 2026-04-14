@@ -223,6 +223,7 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Aluno;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Colaborador;
 import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryAluno;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -302,97 +303,97 @@ import org.springframework.http.ResponseEntity;
     // BUSCA OS ALUNOS PELA MATRICULA
 
     @GetMapping("/aluno/{matricula}")
-    public Aluno listaPelaMatricula(@PathVariable int matricula) {
-
-        return repositoryAluno.findByMatricula(matricula);
-
+    public ResponseEntity<Aluno> listaPelaMatricula(@PathVariable Integer matricula) {
+        return repositoryAluno.findByMatricula(matricula)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // ATUALIZA OS ALUNOS
 
     @PutMapping("/aluno/{matricula}")
-    public ResponseEntity<?> atualizar(@PathVariable Long matricula, @RequestBody Aluno aluno) {
+    public ResponseEntity<?> atualizar(@PathVariable Integer matricula, @RequestBody Aluno aluno) {
+    
         try {
-            Optional<Aluno> existenteOpt = repositoryAluno.findById(matricula);
-
-            if (existenteOpt.isEmpty()) {
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body("Aluno com matrícula " + matricula + " não encontrado.");
-            }
-
-            Aluno existente = existenteOpt.get();
-
-            existente.setFoto(aluno.getFoto());
-            existente.setOficinas(aluno.getOficinas());
-            existente.setNome(aluno.getNome());
-            existente.setCpf(aluno.getCpf());
-            existente.setRg(aluno.getRg());
-            existente.setOrgaoExp(aluno.getOrgaoExp());
-            existente.setDataExpedRg(aluno.getDataExpedRg());
-            existente.setRn(aluno.getRn());
-            existente.setDataNascimento(aluno.getDataNascimento());
-            existente.setIdade(aluno.getIdade());
-            existente.setEscola(aluno.getEscola());
-            existente.setEstado(aluno.getEstado());
-            existente.setCidade(aluno.getCidade());
-            existente.setBairro(aluno.getBairro());
-            existente.setFiliacaoPai(aluno.getFiliacaoPai());
-            existente.setFiliacaoMae(aluno.getFiliacaoMae());
-            existente.setTelefonePai(aluno.getTelefonePai());
-            existente.setTelefoneMae(aluno.getTelefoneMae());
-            existente.setResponsavel(aluno.getResponsavel());
-            existente.setTelefoneResponsavel(aluno.getTelefoneResponsavel());
-            existente.setEmailResponsavel(aluno.getEmailResponsavel());
-            existente.setPossuiDoenca(aluno.getPossuiDoenca());
-            existente.setQualDoenca(aluno.getQualDoenca());
-            existente.setMedicacao(aluno.getMedicacao());
-            existente.setTipoSanguineo(aluno.getTipoSanguineo());
-            existente.setSerieturma(aluno.getSerieturma());
-            existente.setTurnoesc(aluno.getTurnoesc());
-            existente.setAutorizacaoImagem(aluno.getAutorizacaoImagem());
-            existente.setAtividadesExtras(aluno.getAtividadesExtras());
-            existente.setDescricaoAtividadesExtras(aluno.getDescricaoAtividadesExtras());
-            existente.setNecessidadesEspeciais(aluno.getNecessidadesEspeciais());
-            existente.setDescricaoNecessidadesEspeciais(aluno.getDescricaoNecessidadesEspeciais());
-
-            Aluno atualizado = repositoryAluno.save(existente);
-
+        Optional<Aluno> existenteOpt = repositoryAluno.findByMatricula(matricula);
+        if (existenteOpt.isEmpty()) {
             return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body("Aluno atualizado com sucesso! Matrícula: " + atualizado.getMatricula());
-
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao atualizar Aluno: " + e.getMessage());
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Aluno com matrícula " + matricula + " não encontrado.");
         }
+
+        Aluno existente = existenteOpt.get();
+
+        existente.setFoto(aluno.getFoto());
+        existente.setOficinas(aluno.getOficinas());
+        existente.setNome(aluno.getNome());
+        existente.setCpf(aluno.getCpf());
+        existente.setRg(aluno.getRg());
+        existente.setOrgaoExp(aluno.getOrgaoExp());
+        existente.setDataExpedRg(aluno.getDataExpedRg());
+        existente.setRn(aluno.getRn());
+        existente.setDataNascimento(aluno.getDataNascimento());
+        existente.setIdade(aluno.getIdade());
+        existente.setEscola(aluno.getEscola());
+        existente.setEstado(aluno.getEstado());
+        existente.setCidade(aluno.getCidade());
+        existente.setBairro(aluno.getBairro());
+        existente.setFiliacaoPai(aluno.getFiliacaoPai());
+        existente.setFiliacaoMae(aluno.getFiliacaoMae());
+        existente.setTelefonePai(aluno.getTelefonePai());
+        existente.setTelefoneMae(aluno.getTelefoneMae());
+        existente.setResponsavel(aluno.getResponsavel());
+        existente.setTelefoneResponsavel(aluno.getTelefoneResponsavel());
+        existente.setEmailResponsavel(aluno.getEmailResponsavel());
+        existente.setPossuiDoenca(aluno.getPossuiDoenca());
+        existente.setQualDoenca(aluno.getQualDoenca());
+        existente.setMedicacao(aluno.getMedicacao());
+        existente.setTipoSanguineo(aluno.getTipoSanguineo());
+        existente.setSerieturma(aluno.getSerieturma());
+        existente.setTurnoesc(aluno.getTurnoesc());
+        existente.setAutorizacaoImagem(aluno.getAutorizacaoImagem());
+        existente.setAtividadesExtras(aluno.getAtividadesExtras());
+        existente.setDescricaoAtividadesExtras(aluno.getDescricaoAtividadesExtras());
+        existente.setNecessidadesEspeciais(aluno.getNecessidadesEspeciais());
+        existente.setDescricaoNecessidadesEspeciais(aluno.getDescricaoNecessidadesEspeciais());
+
+        Aluno atualizado = repositoryAluno.save(existente);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("Aluno atualizado com sucesso! Matrícula: " + atualizado.getMatricula());
+
+    } catch (Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erro ao atualizar Aluno: " + e.getMessage());
     }
+}
 
     // DELETA OS ALUNOS CADASTRADOS
 
     @DeleteMapping("/aluno/{matricula}")
-    public ResponseEntity<?> deletar(@PathVariable Long matricula) {
-        try {
-            Optional<Aluno> existenteOpt = repositoryAluno.findById(matricula);
+public ResponseEntity<?> deletar(@PathVariable Integer matricula) {
+    try {
+   
+        Optional<Aluno> existenteOpt = repositoryAluno.findByMatricula(matricula);
 
-            if (existenteOpt.isEmpty()) {
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body("Aluno com a matricula" + matricula + "não encontrado.");
-            }
-
-            repositoryAluno.delete(existenteOpt.get());
-
+        if (existenteOpt.isEmpty()) {
             return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body("Aluno com matricula" + matricula + " deletado com sucesso.");
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao deletar Aluno: " + e.getMessage());
-
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Aluno com a matricula " + matricula + " não encontrado.");
         }
+
+        repositoryAluno.delete(existenteOpt.get());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("Aluno com matricula " + matricula + " deletado com sucesso.");
+    } catch (Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erro ao deletar Aluno: " + e.getMessage());
     }
+  }
 
 }
