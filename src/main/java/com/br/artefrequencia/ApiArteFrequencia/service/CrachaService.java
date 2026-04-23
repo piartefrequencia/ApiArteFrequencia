@@ -1,6 +1,5 @@
 package com.br.artefrequencia.ApiArteFrequencia.service;
 
-
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -8,7 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Base64;
 import javax.imageio.ImageIO;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +38,6 @@ public class CrachaService {
 
         BufferedImage cracha = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D grafica = cracha.createGraphics();
-
 
         grafica.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         grafica.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -93,13 +90,12 @@ public class CrachaService {
         int nomeY = fotoY + fotoH + 40;
         int linhas = drawMultiLineCentered(grafica, aluno.getNome().toUpperCase(), width / 2, nomeY, width - 60);
 
-        // QR CODE 
+        // QR CODE
         try {
             int qrSize = 130;
-            // ALTERAÇÃO AQUI: Trocamos aluno.getMatricula() por aluno.getId()
-            // Adicionei o prefixo ID: para facilitar a identificação no scanner
-            String conteudoQR = "ID:" + aluno.getId(); 
-    
+
+            String conteudoQR = "ID:" + aluno.getId();
+
             BufferedImage qrImage = QRCodeGenerator.generateQRCodeImage(conteudoQR, qrSize, qrSize);
             int qrX = (width - qrSize) / 2;
             int qrY = nomeY + (linhas * 25) + 10;
