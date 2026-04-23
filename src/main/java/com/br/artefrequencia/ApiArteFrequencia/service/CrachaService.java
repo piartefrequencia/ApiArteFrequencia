@@ -94,7 +94,7 @@ public class CrachaService {
         try {
             int qrSize = 130;
 
-            String conteudoQR = "ID:" + aluno.getId();
+            String conteudoQR = String.valueOf(aluno.getId());
 
             BufferedImage qrImage = QRCodeGenerator.generateQRCodeImage(conteudoQR, qrSize, qrSize);
             int qrX = (width - qrSize) / 2;
