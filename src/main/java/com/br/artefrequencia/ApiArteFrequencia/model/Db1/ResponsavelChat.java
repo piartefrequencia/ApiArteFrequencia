@@ -15,10 +15,8 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Entity
-@Table(name = "responsavel_chat", 
-       uniqueConstraints = @UniqueConstraint
-       (name = "uq_responsavel_chat", 
-       columnNames = {"aluno_id", "tipo"}))
+@Table(name = "responsavel_chat", uniqueConstraints = @UniqueConstraint
+      (name = "uq_responsavel_chat", columnNames = {"aluno_id", "tipo"}))
 @Data
 public class ResponsavelChat {
 

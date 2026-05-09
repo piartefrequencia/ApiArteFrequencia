@@ -32,8 +32,15 @@ public class PresencaService {
         if (req.getAlunoId() == null || req.getChatId() == null) {
             throw new IllegalArgumentException("ID do aluno e Chat ID são obrigatórios para o vínculo.");
         }
+  
+       /*  // Busca se já existe esse vínculo para não duplicar no banco
         ResponsavelChat chat = repositorychat
             .findByAlunoIdAndChatId(req.getAlunoId(), req.getChatId())
+            .orElse(new ResponsavelChat());
+        */
+        // No vincularTelegram, busque pelo tipo para permitir atualização
+        ResponsavelChat chat = repositorychat
+            .findByAlunoIdAndTipo(req.getAlunoId(), req.getTipo().toUpperCase())
             .orElse(new ResponsavelChat());
 
         chat.setAlunoId(req.getAlunoId());

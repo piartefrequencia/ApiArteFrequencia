@@ -10,5 +10,7 @@ public interface RepositoryResponsavelChat extends JpaRepository<ResponsavelChat
     List<ResponsavelChat> findByAlunoIdAndAtivoTrue(Long alunoId);
 
     Optional<ResponsavelChat> findByAlunoIdAndChatId(Long alunoId, String chatId);
+
+    Optional<ResponsavelChat> findByAlunoIdAndTipo(Long alunoId, String tipo);
     
 }

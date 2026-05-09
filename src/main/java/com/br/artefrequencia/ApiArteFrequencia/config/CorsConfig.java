@@ -30,13 +30,10 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         config.setAllowedOrigins(allowedOrigins);
 
-        // Métodos liberados
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
-        // Headers que o frontend pode enviar
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin"));
 
-        // Headers que o navegador pode expor para o JS ler (se necessário)
         config.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
