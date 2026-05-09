@@ -1,9 +1,14 @@
+
+// AJUSTE SUGERIDO PELO GEMINI 
+
 package com.br.artefrequencia.ApiArteFrequencia.service;
 
 import org.springframework.stereotype.Service;
 import com.br.artefrequencia.ApiArteFrequencia.dto.RegistrarFrequenciaRequest;
+import com.br.artefrequencia.ApiArteFrequencia.dto.VincularChatRequest; 
 import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Aluno;
 import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Presenca;
+import com.br.artefrequencia.ApiArteFrequencia.model.Db1.ResponsavelChat;
 import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryAluno;
 import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryPresenca;
 import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryResponsavelChat;
@@ -23,8 +28,24 @@ public class PresencaService {
     private final RepositoryResponsavelChat repositorychat;
     private final TelegramService servicotelegram;
 
+    public void vincularTelegram(VincularChatRequest req) {
+        if (req.getAlunoId() == null || req.getChatId() == null) {
+            throw new IllegalArgumentException("ID do aluno e Chat ID são obrigatórios para o vínculo.");
+        }
+        ResponsavelChat chat = repositorychat
+            .findByAlunoIdAndChatId(req.getAlunoId(), req.getChatId())
+            .orElse(new ResponsavelChat());
+
+        chat.setAlunoId(req.getAlunoId());
+        chat.setChatId(req.getChatId());
+        chat.setTipo(req.getTipo() == null ? "RESPONSAVEL" : req.getTipo().toUpperCase());
+        chat.setUsername(req.getUsername());
+        chat.setAtivo(true);
+
+        repositorychat.save(chat);
+    }
     public void registrar(RegistrarFrequenciaRequest req) {
-       
+        
         if (req.getAlunoId() == null) {
             throw new IllegalArgumentException("ID do aluno não fornecido pelo QR Code");
         }
@@ -41,7 +62,6 @@ public class PresencaService {
         presenca.setLidoEm(LocalDateTime.now());
 
         repositorypresenca.save(presenca);
-
         try {
             String msg = montarMensagem(aluno, presenca);
             repositorychat.findByAlunoIdAndAtivoTrue(aluno.getId())
@@ -51,7 +71,7 @@ public class PresencaService {
                     }
                 });
         } catch (Exception e) {
-            
+          
             System.err.println("Aviso: Falha ao enviar notificação Telegram: " + e.getMessage());
         }
     }
@@ -61,7 +81,7 @@ public class PresencaService {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
         String momento = presenca.getLidoEm().format(dtf);
 
-        String acao = "SAIDA".equalsIgnoreCase(presenca.getTipo()) ? "encerrou as atividades" : "iniciou as atividades";
+        String acao = "SAIDA".equalsIgnoreCase(presenca.getTipo()) ? "encerrou as atividades" : "iniciou a aula e as atividades";
         
         return String.format("🎵 O aluno %s %s no dia %s na Associação Pró‑Cidadania.", nome, acao, momento);
     }

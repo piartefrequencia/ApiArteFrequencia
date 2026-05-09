@@ -25,6 +25,8 @@ public class ApiArteFrequenciaApplication {
         System.setProperty("DB2_USER", dotenv.get("DB2_USER", System.getenv("DB2_USER")));
         System.setProperty("DB2_PASS", dotenv.get("DB2_PASS", System.getenv("DB2_PASS")));
 
+		System.setProperty("TOKEN_TELEGRAM", dotenv.get("TOKEN_TELEGRAM", System.getenv("TOKEN_TELEGRAM")));
+
 		System.setProperty("CORS_ORIGIN", dotenv.get("CORS_ORIGIN", System.getenv("CORS_ORIGIN")));
 		
 		System.setProperty("JWT_SECRET", dotenv.get("JWT_SECRET", System.getenv("JWT_SECRET")));

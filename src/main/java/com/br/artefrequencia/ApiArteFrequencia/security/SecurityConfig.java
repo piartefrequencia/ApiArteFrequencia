@@ -42,6 +42,7 @@ public class SecurityConfig {
                         }))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/artefrequencia/auth/**").permitAll()
+                        .requestMatchers("/api/artefrequencia/frequencia/vincular-telegram").permitAll()
                         .requestMatchers("/api/artefrequencia/frequencia/registrar").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
