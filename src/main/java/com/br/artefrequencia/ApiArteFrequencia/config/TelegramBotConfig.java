@@ -11,7 +11,7 @@ import com.br.artefrequencia.ApiArteFrequencia.dto.VincularChatRequest;
 import com.br.artefrequencia.ApiArteFrequencia.service.PresencaService;
 
 import lombok.RequiredArgsConstructor;
-  
+
 @Component
 @RequiredArgsConstructor
 public class TelegramBotConfig extends TelegramLongPollingBot {
@@ -28,26 +28,35 @@ public class TelegramBotConfig extends TelegramLongPollingBot {
     public String getBotToken() {
         return botToken;
     }
+
     @Override
     public String getBotUsername() {
         return botUsername;
     }
-
+    
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
+               if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
             String username = update.getMessage().getFrom().getUserName();
+  
+            System.out.println("LOG ARTE FREQUENCIA: Mensagem recebida de " + chatId + ": " + messageText);
 
             if (messageText.startsWith("/start")) {
                 try {
-                    String parameter = messageText.replace("/start", "").trim();
+                   
+                    String parameter = "";
+                    if (messageText.contains(" ")) {
+                        parameter = messageText.substring(messageText.indexOf(" ")).trim();
+                    }
+
+                    System.out.println("LOG ARTE FREQUENCIA: Parâmetro extraído: [" + parameter + "]");
 
                     if (!parameter.isEmpty() && parameter.contains("_")) {
                         String[] partes = parameter.split("_");
                         Long alunoId = Long.parseLong(partes[0]);
-                        String tipo = partes[1]; 
+                        String tipo = partes[1].toUpperCase(); 
 
                         VincularChatRequest vinculo = new VincularChatRequest();
                         vinculo.setAlunoId(alunoId);
@@ -57,14 +66,19 @@ public class TelegramBotConfig extends TelegramLongPollingBot {
 
                         presencaService.vincularTelegram(vinculo);
 
-                        enviarResposta(chatId,
-                                "✅ Sucesso! Agora você receberá as notificações de " + tipo + " para este aluno.");
+                        enviarResposta(chatId, 
+                            "✅ *Vínculo realizado com sucesso!*\n\n" +
+                            "Agora você receberá as notificações de *" + tipo + "* para o aluno ID: " + alunoId + ".");
+                        
+                        System.out.println("LOG ARTE FREQUENCIA: Sucesso ao vincular Aluno ID " + alunoId + " ao Chat " + chatId);
+                        
                     } else {
-                        enviarResposta(chatId,
-                                "👋 Bem-vindo! Use os botões no sistema da escola para vincular seu acesso.");
+                        
+                        enviarResposta(chatId, "👋 Olá! Para receber notificações, use o link enviado pela coordenação da *Associação Pró‑Cidadania*.");
                     }
                 } catch (Exception e) {
-                    enviarResposta(chatId, "❌ Erro ao processar vínculo. Tente novamente pelo link do sistema.");
+                    System.err.println("LOG ARTE FREQUENCIA: Erro ao processar vínculo: " + e.getMessage());
+                    enviarResposta(chatId, "❌ Ocorreu um erro ao vincular. Verifique se o link está correto.");
                 }
             }
         }
@@ -74,10 +88,11 @@ public class TelegramBotConfig extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
         message.setChatId(chatId.toString());
         message.setText(texto);
+        message.setParseMode("Markdown"); 
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.err.println("LOG ARTE FREQUENCIA: Falha ao enviar resposta para Telegram: " + e.getMessage());
         }
     }
 }
