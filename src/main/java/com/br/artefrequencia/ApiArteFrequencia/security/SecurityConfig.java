@@ -20,7 +20,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @EnableWebSecurity
 public class SecurityConfig {
 
-
     @Autowired
     private JwtFilter jwtFilter;
 
@@ -62,5 +61,4 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
-    
 }
