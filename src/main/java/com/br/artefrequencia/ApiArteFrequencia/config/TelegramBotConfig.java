@@ -1,5 +1,6 @@
 package com.br.artefrequencia.ApiArteFrequencia.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -10,13 +11,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.br.artefrequencia.ApiArteFrequencia.dto.VincularChatRequest;
 import com.br.artefrequencia.ApiArteFrequencia.service.PresencaService;
 
-import lombok.RequiredArgsConstructor;
-
 @Component
-@RequiredArgsConstructor
 public class TelegramBotConfig extends TelegramLongPollingBot {
 
-    private final PresencaService presencaService;
+    @Autowired
+    private PresencaService presencaService;
 
     @Value("${telegram.bot.token}")
     private String botToken;
@@ -36,7 +35,7 @@ public class TelegramBotConfig extends TelegramLongPollingBot {
     
     @Override
     public void onUpdateReceived(Update update) {
-               if (update.hasMessage() && update.getMessage().hasText()) {
+        if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
             String username = update.getMessage().getFrom().getUserName();
@@ -45,7 +44,6 @@ public class TelegramBotConfig extends TelegramLongPollingBot {
 
             if (messageText.startsWith("/start")) {
                 try {
-                   
                     String parameter = "";
                     if (messageText.contains(" ")) {
                         parameter = messageText.substring(messageText.indexOf(" ")).trim();
@@ -73,11 +71,11 @@ public class TelegramBotConfig extends TelegramLongPollingBot {
                         System.out.println("LOG ARTE FREQUENCIA: Sucesso ao vincular Aluno ID " + alunoId + " ao Chat " + chatId);
                         
                     } else {
-                        
                         enviarResposta(chatId, "👋 Olá! Para receber notificações, use o link enviado pela coordenação da *Associação Pró‑Cidadania*.");
                     }
                 } catch (Exception e) {
                     System.err.println("LOG ARTE FREQUENCIA: Erro ao processar vínculo: " + e.getMessage());
+                    e.printStackTrace(); // Importante para ver o erro completo no log da Render se falhar
                     enviarResposta(chatId, "❌ Ocorreu um erro ao vincular. Verifique se o link está correto.");
                 }
             }
