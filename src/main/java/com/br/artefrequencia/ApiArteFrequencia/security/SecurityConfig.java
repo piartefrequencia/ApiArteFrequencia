@@ -40,7 +40,7 @@ public class SecurityConfig {
                             response.getWriter().write("{\"message\": \"Sua sessão expirou. Faça login novamente.\"}");
                         }))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/artefrequencia/auth/**").permitAll()
+                        .requestMatchers("/api/artefrequencia/auth/login","/api/artefrequencia/auth/refresh").permitAll()
                         .requestMatchers("/api/artefrequencia/partitura").permitAll()
                         .requestMatchers("/api/artefrequencia/frequencia/vincular-telegram").permitAll()
                         .requestMatchers("/api/artefrequencia/frequencia/registrar").permitAll()

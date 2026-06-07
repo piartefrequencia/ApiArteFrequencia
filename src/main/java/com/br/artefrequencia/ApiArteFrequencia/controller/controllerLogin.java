@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.br.artefrequencia.ApiArteFrequencia.dto.LoginRequest;
 import com.br.artefrequencia.ApiArteFrequencia.dto.LoginResponse;
+import com.br.artefrequencia.ApiArteFrequencia.enums.Perfil;
 import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Usuario;
 import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryUsuario;
 import com.br.artefrequencia.ApiArteFrequencia.security.JwtUtil;
@@ -31,26 +32,32 @@ public class controllerLogin {
     private JwtUtil jwtUtil;
 
     @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req) {
-        Usuario user = repositoryusuario.findByEmail(req.getEmail()).orElse(null);
+public ResponseEntity<?> login(@RequestBody LoginRequest req) {
 
-        if (user == null || !PasswordBCript.matches(req.getSenha(), user.getSenha())) {
-            return ResponseEntity.status(401)
-                                 .body("Credenciais inválidas");
-        }
-        if (user.getPerfil() == null) {
-            return ResponseEntity.status(401)
-                                 .body("Perfil do usuário inválido");
-        }
+    Usuario user = repositoryusuario.findByEmail(req.getEmail()).orElse(null);
 
-        String token = jwtUtil.generateToken(user);
-
-        return ResponseEntity.ok(new LoginResponse(
-                token,
-                user.getPerfil().name(),
-                user.getUsuario(),
-                user.getEmail()));
+    if (user == null || !PasswordBCript.matches(req.getSenha(), user.getSenha())) {
+        return ResponseEntity.status(401).body("Credenciais inválidas");
     }
 
+    String accessToken = jwtUtil.generateAccessToken(user);
+    String refreshToken = null;
+
+    if (user.getPerfil() == Perfil.ADMIN ||
+        user.getPerfil() == Perfil.COLAB) {
+
+    refreshToken = jwtUtil.generateRefreshToken(user);
+}
+
+    return ResponseEntity.ok(
+        new LoginResponse(
+            accessToken,
+            refreshToken,
+            user.getPerfil().name(),
+            user.getUsuario(),
+            user.getEmail()
+        )
+      );
+  }
     
 }

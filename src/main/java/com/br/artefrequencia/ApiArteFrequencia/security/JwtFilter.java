@@ -21,44 +21,63 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-  
+
     @Autowired
-    private JwtUtil jwtUtil; 
-    
+    private JwtUtil jwtUtil;
+
     @Autowired
     private RepositoryUsuario usuarioRepository;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+
+        String path = request.getServletPath();
+
+        return path.equals("/api/artefrequencia/auth/login")
+                || path.equals("/api/artefrequencia/auth/refresh");
+    }
 
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+            FilterChain filterChain)
+            throws ServletException, IOException {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (header != null && header.startsWith("Bearer ")) {
+
             String token = header.substring(7);
 
             if (jwtUtil.validateToken(token)) {
+
                 String email = jwtUtil.extractEmail(token);
-                Usuario user = usuarioRepository.findByEmail(email).orElse(null);
+
+                Usuario user = usuarioRepository
+                        .findByEmail(email)
+                        .orElse(null);
 
                 if (user != null) {
-                    var auth = new UsernamePasswordAuthenticationToken(
-                            user.getEmail(),
-                            null,
-                            Collections.singleton(
-                                    new SimpleGrantedAuthority("ROLE_" + user.getPerfil().name())
-                            )
-                    );
-                    SecurityContextHolder.getContext().setAuthentication(auth);
+
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(
+                                    user.getEmail(),
+                                    null,
+                                    Collections.singleton(
+                                            new SimpleGrantedAuthority(
+                                                    "ROLE_" + user.getPerfil().name()
+                                            )
+                                    )
+                            );
+
+                    SecurityContextHolder
+                            .getContext()
+                            .setAuthentication(auth);
                 }
             }
         }
 
         filterChain.doFilter(request, response);
     }
-
-    
 }

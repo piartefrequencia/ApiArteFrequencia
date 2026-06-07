@@ -1,18 +1,14 @@
 package com.br.artefrequencia.ApiArteFrequencia.security;
 
-import java.time.Duration;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.Duration; 
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.br.artefrequencia.ApiArteFrequencia.model.Db1.Usuario;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
 @Component
@@ -22,43 +18,61 @@ public class JwtUtil {
     private String secret;
 
     @Value("${jwt.expiration}")
-    private Duration expiration;
+    private Duration accessExpiration;
 
-    public String generateToken(Usuario user) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("perfil", user.getPerfil().name());
-        claims.put("usuario", user.getUsuario());
+    @Value("${jwt.refresh.expiration}")
+    private Duration refreshExpiration;
 
-        long now = System.currentTimeMillis();
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(user.getEmail())
-                .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + expiration.toMillis()))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
-                .compact();
+    public String generateAccessToken(Usuario user) {
+     
+        return buildToken(user, accessExpiration);
     }
 
-    public Claims extractAllClaims(String token) {
+    public String generateRefreshToken(Usuario user) {
+        return Jwts.builder()
+            .setSubject(user.getEmail())
+            .claim("perfil", user.getPerfil().name())
+            .claim("type", "refresh")
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration.toMillis()))
+            .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
+            .compact();
+    }
+
+    
+    private String buildToken(Usuario user, Duration expiration) {
+        return Jwts.builder()
+            .setSubject(user.getEmail())
+            .claim("perfil", user.getPerfil().name())
+            .claim("type", "access")
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + expiration.toMillis()))
+            .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
+            .compact();
+    }
+
+    public Claims getClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+            .setSigningKey(secret.getBytes())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+    }
+
+    public boolean isRefreshToken(String token) {
+        return "refresh".equals(getClaims(token).get("type"));
+    }
+
+    public String extractEmail(String token) {
+        return getClaims(token).getSubject();
     }
 
     public boolean validateToken(String token) {
         try {
-            extractAllClaims(token);
+            getClaims(token);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
-
-    public String extractEmail(String token) {
-        return extractAllClaims(token).getSubject();
-    }
-
 }

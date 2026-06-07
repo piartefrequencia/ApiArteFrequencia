@@ -35,6 +35,8 @@ public class ApiArteFrequenciaApplication {
 		
 		System.setProperty("JWT_EXPIRATION", dotenv.get("JWT_EXPIRATION", System.getenv("JWT_EXPIRATION")));
 
+		System.setProperty("JWT_EXPIRATION_REFRESH", dotenv.get("JWT_EXPIRATION_REFRESH", System.getenv("JWT_EXPIRATION_REFRESH")));
+
 		SpringApplication.run(ApiArteFrequenciaApplication.class, args);
 
 	}
