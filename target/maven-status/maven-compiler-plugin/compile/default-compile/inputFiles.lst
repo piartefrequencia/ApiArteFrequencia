@@ -4,6 +4,7 @@ C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\j
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\config\Db2Config.java
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\config\SwaggerConfig.java
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\config\TelegramBotConfig.java
+C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\config\TelegramBotInitializer.java
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\controller\controllerAluno.java
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\controller\controllerColaborador.java
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\controller\controllerCracha.java
@@ -11,6 +12,7 @@ C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\j
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\controller\controllerLogin.java
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\controller\controllerPartitura.java
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\controller\controllerPresente.java
+C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\controller\controllerRefresh.java
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\controller\controllerTesteAPI.java
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\controller\controllerUsuario.java
 C:\Users\Flavia\Desktop\Curso de DS ETE anotações\ApiArteFrequencia\src\main\java\com\br\artefrequencia\ApiArteFrequencia\dto\AlunoResposta.java

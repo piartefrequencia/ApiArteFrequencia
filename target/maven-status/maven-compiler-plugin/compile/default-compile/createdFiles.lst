@@ -2,6 +2,7 @@ com\br\artefrequencia\ApiArteFrequencia\config\TelegramBotConfig.class
 com\br\artefrequencia\ApiArteFrequencia\model\RespostaModelo.class
 com\br\artefrequencia\ApiArteFrequencia\service\UserDetailsServiceImpl.class
 com\br\artefrequencia\ApiArteFrequencia\repository\Db2\RepositoryPartitura.class
+com\br\artefrequencia\ApiArteFrequencia\config\TelegramBotInitializer.class
 com\br\artefrequencia\ApiArteFrequencia\model\Db1\Aluno.class
 com\br\artefrequencia\ApiArteFrequencia\controller\controllerTesteAPI.class
 com\br\artefrequencia\ApiArteFrequencia\validacion\Validacao.class
@@ -34,6 +35,7 @@ com\br\artefrequencia\ApiArteFrequencia\config\Db1Config.class
 com\br\artefrequencia\ApiArteFrequencia\security\JwtUtil.class
 com\br\artefrequencia\ApiArteFrequencia\enums\Perfil.class
 com\br\artefrequencia\ApiArteFrequencia\service\CrachaService.class
+com\br\artefrequencia\ApiArteFrequencia\controller\controllerRefresh.class
 com\br\artefrequencia\ApiArteFrequencia\model\Db1\Usuario.class
 com\br\artefrequencia\ApiArteFrequencia\model\Db1\Colaborador.class
 com\br\artefrequencia\ApiArteFrequencia\config\SwaggerConfig.class
