@@ -27,6 +27,7 @@ com\br\artefrequencia\ApiArteFrequencia\util\PasswordBCript.class
 com\br\artefrequencia\ApiArteFrequencia\dto\FrequenciaMes.class
 com\br\artefrequencia\ApiArteFrequencia\dto\RegistrarFrequenciaResponse.class
 com\br\artefrequencia\ApiArteFrequencia\repository\Db1\RepositoryUsuario.class
+com\br\artefrequencia\ApiArteFrequencia\controller\controllerTelegramChat.class
 com\br\artefrequencia\ApiArteFrequencia\model\Db1\ResponsavelChat.class
 com\br\artefrequencia\ApiArteFrequencia\config\Db2Config.class
 com\br\artefrequencia\ApiArteFrequencia\security\JwtFilter.class

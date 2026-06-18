@@ -16,6 +16,7 @@ import com.br.artefrequencia.ApiArteFrequencia.repository.Db1.RepositoryResponsa
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor; 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -33,11 +34,6 @@ public class PresencaService {
             throw new IllegalArgumentException("ID do aluno e Chat ID são obrigatórios para o vínculo.");
         }
   
-       /*  // Busca se já existe esse vínculo para não duplicar no banco
-        ResponsavelChat chat = repositorychat
-            .findByAlunoIdAndChatId(req.getAlunoId(), req.getChatId())
-            .orElse(new ResponsavelChat());
-        */
         // No vincularTelegram, busque pelo tipo para permitir atualização
         ResponsavelChat chat = repositorychat
             .findByAlunoIdAndTipo(req.getAlunoId(), req.getTipo().toUpperCase())
@@ -63,10 +59,23 @@ public class PresencaService {
         Presenca presenca = new Presenca();
         presenca.setAlunoId(aluno.getId()); 
         
+        /* versão que monta a mensagem que envia para o telegram
+
         String tipoFinal = (req.getTipo() == null || req.getTipo().trim().isEmpty()) ? "ENTRADA" : req.getTipo().toUpperCase();
         presenca.setTipo(tipoFinal);
         presenca.setOrigem("APP_QR");
         presenca.setLidoEm(LocalDateTime.now());
+        */
+        
+        // alteração pra converter o horario do Brasil
+        String tipoFinal = (req.getTipo() == null || req.getTipo().trim().isEmpty())
+        ? "ENTRADA"
+        : req.getTipo().toUpperCase();
+            presenca.setTipo(tipoFinal);
+            presenca.setOrigem("APP_QR");
+            presenca.setLidoEm(
+                LocalDateTime.now(ZoneId.of("America/Sao_Paulo"))
+);
 
         repositorypresenca.save(presenca);
         try {
