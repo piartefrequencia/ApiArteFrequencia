@@ -11,6 +11,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.br.artefrequencia.ApiArteFrequencia.dto.VincularChatRequest;
 import com.br.artefrequencia.ApiArteFrequencia.service.PresencaService;
 
+
+
 @Component
 public class TelegramBotConfig extends TelegramLongPollingBot {
 
@@ -62,21 +64,34 @@ public class TelegramBotConfig extends TelegramLongPollingBot {
                         vinculo.setTipo(tipo);
                         vinculo.setUsername(username != null ? username : "SemUsername");
 
-                        presencaService.vincularTelegram(vinculo);
+                        // Invoca o serviço que agora salva no banco e devolve o nome do aluno
+                        String nomeAluno = presencaService.vincularTelegram(vinculo);
 
-                        enviarResposta(chatId, 
+                        // Tratamento visual para o Tipo de Responsável ficar bonito na leitura
+                        String tipoFormatado = tipo;
+                        if ("MAE".equals(tipo)) tipoFormatado = "Mãe";
+                        if ("PAI".equals(tipo)) tipoFormatado = "Pai";
+                        if ("RESPONSAVEL".equals(tipo)) tipoFormatado = "Responsável";
+
+                        // Mensagem aprimorada para melhor entendimento da família
+                        String mensagemAcolhedora = 
                             "✅ *Vínculo realizado com sucesso!*\n\n" +
-                            "Agora você receberá as notificações de *" + tipo + "* para o aluno ID: " + alunoId + ".");
+                            "Olá! A partir de agora, você receberá aqui no Telegram as notificações de *" + tipoFormatado + "* " +
+                            "sobre a frequência do(a) aluno(a) *\uD83D\uDC66 " + nomeAluno + "*, referente às suas atividades " +
+                            "na *Associação Pró-Cidadania*.\n\n" +
+                            "\uD83D\uDD14 _Não se preocupe, avisaremos você assim que a presença for registrada!_";
+
+                        enviarResposta(chatId, mensagemAcolhedora);
                         
-                        System.out.println("LOG ARTE FREQUENCIA: Sucesso ao vincular Aluno ID " + alunoId + " ao Chat " + chatId);
+                        System.out.println("LOG ARTE FREQUENCIA: Sucesso ao vincular Aluno " + nomeAluno + " ao Chat " + chatId);
                         
                     } else {
-                        enviarResposta(chatId, "👋 Olá! Para receber notificações, use o link enviado pela coordenação da *Associação Pró‑Cidadania*.");
+                        enviarResposta(chatId, "👋 Olá! Para receber as notificações de frequência, use o link oficial enviado pela coordenação da *Associação Pró‑Cidadania*.");
                     }
                 } catch (Exception e) {
                     System.err.println("LOG ARTE FREQUENCIA: Erro ao processar vínculo: " + e.getMessage());
-                    e.printStackTrace(); // Importante para ver o erro completo no log da Render se falhar
-                    enviarResposta(chatId, "❌ Ocorreu um erro ao vincular. Verifique se o link está correto.");
+                    e.printStackTrace();
+                    enviarResposta(chatId, "❌ Ocorreu um erro ao realizar o vínculo. Por favor, solicite um novo link à coordenação.");
                 }
             }
         }

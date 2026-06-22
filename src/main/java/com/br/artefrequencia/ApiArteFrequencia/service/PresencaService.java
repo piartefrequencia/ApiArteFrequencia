@@ -1,6 +1,5 @@
 
 // AJUSTE SUGERIDO PELO GEMINI 
-
 package com.br.artefrequencia.ApiArteFrequencia.service;
 
 import org.springframework.stereotype.Service;
@@ -29,12 +28,20 @@ public class PresencaService {
     private final RepositoryResponsavelChat repositorychat;
     private final TelegramService servicotelegram;
 
-    public void vincularTelegram(VincularChatRequest req) {
+    /**
+     * Alinhado para retornar o nome do aluno após realizar o vínculo,
+     * permitindo que o Bot envie uma confirmação personalizada e acolhedora.
+     */
+    public String vincularTelegram(VincularChatRequest req) {
         if (req.getAlunoId() == null || req.getChatId() == null) {
             throw new IllegalArgumentException("ID do aluno e Chat ID são obrigatórios para o vínculo.");
         }
   
-        // No vincularTelegram, busque pelo tipo para permitir atualização
+        // Busca o aluno no banco para extrair o nome e validar a existência
+        Aluno aluno = repositoryaluno.findById(req.getAlunoId())
+            .orElseThrow(() -> new IllegalArgumentException("Aluno com ID " + req.getAlunoId() + " não encontrado no sistema"));
+
+        // Busca pelo tipo para permitir atualização caso o responsável refaça o processo
         ResponsavelChat chat = repositorychat
             .findByAlunoIdAndTipo(req.getAlunoId(), req.getTipo().toUpperCase())
             .orElse(new ResponsavelChat());
@@ -46,7 +53,11 @@ public class PresencaService {
         chat.setAtivo(true);
 
         repositorychat.save(chat);
+
+        // Retorna o nome mapeado com segurança
+        return aluno.getNome();
     }
+
     public void registrar(RegistrarFrequenciaRequest req) {
         
         if (req.getAlunoId() == null) {
@@ -59,25 +70,17 @@ public class PresencaService {
         Presenca presenca = new Presenca();
         presenca.setAlunoId(aluno.getId()); 
         
-        /* versão que monta a mensagem que envia para o telegram
-
-        String tipoFinal = (req.getTipo() == null || req.getTipo().trim().isEmpty()) ? "ENTRADA" : req.getTipo().toUpperCase();
-        presenca.setTipo(tipoFinal);
-        presenca.setOrigem("APP_QR");
-        presenca.setLidoEm(LocalDateTime.now());
-        */
-        
         // alteração pra converter o horario do Brasil
         String tipoFinal = (req.getTipo() == null || req.getTipo().trim().isEmpty())
-        ? "ENTRADA"
-        : req.getTipo().toUpperCase();
-            presenca.setTipo(tipoFinal);
-            presenca.setOrigem("APP_QR");
-            presenca.setLidoEm(
-                LocalDateTime.now(ZoneId.of("America/Sao_Paulo"))
-);
+            ? "ENTRADA"
+            : req.getTipo().toUpperCase();
+        
+        presenca.setTipo(tipoFinal);
+        presenca.setOrigem("APP_QR");
+        presenca.setLidoEm(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
 
         repositorypresenca.save(presenca);
+        
         try {
             String msg = montarMensagem(aluno, presenca);
             repositorychat.findByAlunoIdAndAtivoTrue(aluno.getId())
@@ -87,7 +90,6 @@ public class PresencaService {
                     }
                 });
         } catch (Exception e) {
-          
             System.err.println("Aviso: Falha ao enviar notificação Telegram: " + e.getMessage());
         }
     }
